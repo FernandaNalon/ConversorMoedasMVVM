@@ -1,0 +1,10 @@
+﻿using Foundation;
+
+namespace ConversorMoedasMVVM
+{
+    [Register("AppDelegate")]
+    public class AppDelegate : MauiUIApplicationDelegate
+    {
+        protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+    }
+}

@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Define a classe que representa esta página (code-behind MainPage.xaml.cs).
+No projeto anterior (code-behind), esse mesmo x:Class também era usado,
+mas a diferença é que antes o arquivo .cs tinha toda a lógica.
+Agora a classe só inicializa a tela e aponta para a ViewModel. -->
+    
+<ContentPage
+    x:Class="ConversorMoedasMVVM.Views.MainPage"   
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Diagrama de fluxo MVVM:
+    Entry → AmountText (ViewModel) → ConvertCommand → Model.Convert(...) → ResultText (ViewModel) → Label
+    Esse fluxo mostra claramente que a View apenas exibe e envia dados via Binding. -->
+
+    <ScrollView>
+        <!-- Permite rolar a tela em dispositivos pequenos, diferente do anterior
+        que não tinha esse recurso e podia cortar conteúdo em celulares menores. -->
+
+        <VerticalStackLayout Padding="20" Spacing="14">
+            <!-- Organiza os elementos em coluna,
+            com espaçamento de 14 e margem de 20. -->
+
+            <!-- Título da página -->
+            <Label Text="Conversor de Moedas" FontSize="24" FontAttributes="Bold" />
+
+            <!-- Entrada de valor -->
+            <Entry
+                
+                Placeholder="Valor"        
+                Keyboard="Numeric"
+                
+                Text="{Binding AmountText, Mode=TwoWay}" /> 
+                <!-- Binding bidirecional: o que o usuário digita vai para a ViewModel,
+                e se a VM mudar o valor, reflete aqui.
+                Antes: usava valorEntry.Text no code-behind. -->
+            
+                <!--Mode=TwoWay: significa que a ligação funciona em duas direções:
+                Se o usuário trocar o Picker → From na VM é atualizado.
+                Se a VM mudar From (ex.: ao inverter moedas) → o Picker troca sozinho.-->
+
+            <!-- Área com seleção de moedas -->
+            <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="8">
+
+                <!-- Picker para moeda de origem -->
+                <!-- ItemsSource: vem da propriedade Currencies na VM, que consulta a Model RateTable. -->
+                <Picker Grid.Column="0"
+                        Title="De"
+                        ItemsSource="{Binding Currencies}"          
+                        SelectedItem="{Binding From, Mode=TwoWay}" />
+                        <!-- Binding da seleção.
+                        Antes: usava picker.SelectedItem direto no .cs. Agora: vai para a propriedade From na VM. -->
+
+                
+                        <!-- Botão de inverter moedas -->
+                        <Button Grid.Column="1" Text="Inverter" Command="{Binding SwapCommand}" />
+                        <!-- Antes: evento Clicked fazia a troca manual no code-behind.
+                        Agora: o Command chama o método DoSwap na VM. -->
+
+                        <!-- Picker para moeda de destino -->
+                        <Picker Grid.Column="2"
+                        Title="Para"
+                        ItemsSource="{Binding Currencies}"        
+                        SelectedItem="{Binding To, Mode=TwoWay}" />
+                        <!-- Propriedade To na VM. Antes: usado direto no code-behind. -->
+                </Grid>
+
+                <!-- Botões de ação -->
+                <Button Text="Converter" Command="{Binding ConvertCommand}" />
+                <!-- Antes: Clicked="OnConverterClicked" e a lógica ficava no .cs.
+                 Agora: só liga no ConvertCommand da VM. -->
+
+                <Button Text="Limpar"    Command="{Binding ClearCommand}"  />
+                <!-- Antes: zerava entry.Text e label.Text manualmente.
+                 Agora: ClearCommand limpa propriedades da VM (AmountText, ResultText). -->
+
+                <!-- Exibição do resultado -->
+                <Frame Padding="16" HasShadow="False">
+                    
+                    <!-- Caixa de destaque visual para o resultado -->
+                    <Label Text="{Binding ResultText}" FontSize="18" />
+                    <!-- Antes: resultadoLabel.Text era atualizado manualmente.
+                     Agora: Label está ligado à propriedade ResultText na VM.
+                     Sempre que a VM dispara OnPropertyChanged("ResultText"),
+                     o valor aqui é atualizado automaticamente. -->
+                </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- “guarda-chuva” da aplicação, ele define a estrutura de navegação -->
+
+<!-- [1] Classe code-behind que representa o Shell.
+O AppShell.xaml.cs terá apenas InitializeComponent(), assim como MainPage.xaml.cs. -->
+<Shell
+    x:Class="ConversorMoedasMVVM.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:ConversorMoedasMVVM.Views"
+    Title="ConversorMoedasMVVM">
+    <!-- O clr-namespace importa o namespace das Views para poder referenciar MainPage. -->
+    <!-- O title define o título geral do app. Em dispositivos móveis, pode aparecer como título da janela ou do app. -->
+
+    <!-- Conteúdo principal do Shell -->
+    <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="MainPage" />
+    <!-- Title é o título da aba/rota que aparece no topo ou na barra de navegação. -->
+    <!-- O ContentTemplate diz que o conteúdo será a MainPage. Usa um DataTemplate para instanciar a View. -->
+    <!-- A Route define a rota de navegação. Isso permite que o app navegue para "MainPage" via código ou Shell navigation. -->
+
+</Shell>
